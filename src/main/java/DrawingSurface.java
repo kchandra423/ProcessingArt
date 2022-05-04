@@ -40,7 +40,7 @@ public class DrawingSurface extends PApplet {
         ellipse(0,0, 5, 5);
         fill(255, 192, 203);
         for (int i = 0; i < 5; i++) {
-            ellipse(0, -5, 5, 5);
+            ellipse(0, -5, 4, 5);
             rotate(radians(72));
         }
         popMatrix();
