@@ -1,11 +1,20 @@
 import java.awt.*;
-import java.awt.geom.Line2D;
 import java.util.ArrayList;
 
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
-
 public class Tree {
+    public ColorScheme getType() {
+        return type;
+    }
+
+    public enum ColorScheme {
+        FALL, WINTER, SPRING;
+
+        public static ColorScheme getRandom() {
+            return values()[(int) (Math.random() * values().length)];
+        }
+    }
+
+    private final ColorScheme type;
     private final ArrayList<ArrayList<Line>> lines = new ArrayList<>();
     private final double growthRate;// growth percentage per second
     private int curLevel = 0;
@@ -15,12 +24,13 @@ public class Tree {
     private boolean done = false;
 
     public Tree(int startx) {
-        this.growthRate = 0.3 + Math.random() * 0.2;
+        type = ColorScheme.getRandom();
+        this.growthRate = 0.3 + Math.random() * 0.3;
         maxLvl = (int) (5 + Math.random() * 5);
         for (int i = 0; i <= maxLvl; i++) {
             lines.add(new ArrayList<Line>());
         }
-        drawTreeRecur((int) (100 + Math.random() * 50), startx, 500, -Math.PI / 2, 0);
+        drawTreeRecur((int) (100 + Math.random() * 100), startx, DrawingSurface.getHeight() - 100, -Math.PI / 2  + (float)((Math.random()-0.5) * Math.PI / 20), 0);
     }
 
     public void drawTreeRecur(int length, int startx, int starty, double angle, int level) {
@@ -30,8 +40,8 @@ public class Tree {
         Line curLine = new Line(new Point(startx, starty), length, angle);
         Point cur = curLine.getEnd();
         lines.get(level).add(curLine);
-        drawTreeRecur((int) (2 * length / 3 + (Math.random() - 0.5) / 3), cur.x, cur.y, (float) (angle + (Math.PI / 8 + Math.random() * Math.PI / 8)), level + 1);
-        drawTreeRecur((int) (2 * length / 3 + (Math.random() - 0.5) / 3), cur.x, cur.y, (float) (angle - (Math.PI / 8 + Math.random() * Math.PI / 8)), level + 1);
+        drawTreeRecur((int) (2 * length / 3 + (Math.random() - 0.5) / 3), cur.x, cur.y, (float) (angle + (Math.PI / 8 + Math.random() * Math.PI / 5 * (float) level / maxLvl)), level + 1);
+        drawTreeRecur((int) (2 * length / 3 + (Math.random() - 0.5) / 3), cur.x, cur.y, (float) (angle - (Math.PI / 8 + Math.random() * Math.PI / 5 * (float) level / maxLvl)), level + 1);
     }
 
     public ArrayList<ArrayList<Line>> getLines() {
@@ -57,6 +67,10 @@ public class Tree {
             done = true;
         }
         return answer;
+    }
+
+    public int getMaxLvl() {
+        return maxLvl;
     }
 
     public boolean isDone() {
